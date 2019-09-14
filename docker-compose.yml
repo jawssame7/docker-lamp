@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  mysql:
+    build: ./mysql
+    container_name: "mysql"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db-data:/var/lib/mysql/
+      - ./mysql/mysql.conf.d/:/etc/mysql/mysql.conf.d/
+    restart: always
+    privileged: true
+    environment:
+      MYSQL_ROOT_PASSWORD: 000000
+      MYSQL_DATABASE: app
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 000000
+  web:
+    depends_on:
+      - mysql
+    build: ./web
+    container_name: "web"
+    ports:
+      - "80:80"
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    restart: always
+    privileged: true
+volumes:
+    data:
